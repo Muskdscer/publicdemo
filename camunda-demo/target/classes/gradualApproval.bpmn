@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0p1akz6" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.29.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.22.0">
+  <bpmn:process id="gradualApproval" name="gradualApproval" isExecutable="true">
+    <bpmn:extensionElements />
+    <bpmn:startEvent id="StartEvent_1" name="开始">
+      <bpmn:outgoing>Flow_1747ke5</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_1747ke5" sourceRef="StartEvent_1" targetRef="Activity_14mnow7" />
+    <bpmn:userTask id="Activity_14mnow7" name="申请" camunda:assignee="${assignee}">
+      <bpmn:incoming>Flow_1747ke5</bpmn:incoming>
+      <bpmn:incoming>Flow_1ncl3k8</bpmn:incoming>
+      <bpmn:incoming>Flow_03ckde1</bpmn:incoming>
+      <bpmn:outgoing>Flow_0t3binq</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_0t3binq" sourceRef="Activity_14mnow7" targetRef="Activity_1ezp043" />
+    <bpmn:userTask id="Activity_1ezp043" name="审批起点" camunda:assignee="${assignee}">
+      <bpmn:incoming>Flow_0t3binq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1596fhq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_03ckde1</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="assigneeList" camunda:elementVariable="assignee">
+        <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">${nrOfCompletedInstances == numberApprovals}</bpmn:completionCondition>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:userTask>
+    <bpmn:endEvent id="Event_110i53j" name="结束">
+      <bpmn:incoming>Flow_0ug1mkb</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0ug1mkb" sourceRef="Activity_156io7d" targetRef="Event_110i53j" />
+    <bpmn:sequenceFlow id="Flow_1596fhq" sourceRef="Activity_1ezp043" targetRef="Activity_156io7d" />
+    <bpmn:userTask id="Activity_156io7d" name="审批终点" camunda:assignee="${assignee}">
+      <bpmn:incoming>Flow_1596fhq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0ug1mkb</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1ncl3k8</bpmn:outgoing>
+      <bpmn:multiInstanceLoopCharacteristics camunda:collection="assigneeList2" camunda:elementVariable="assignee">
+        <bpmn:completionCondition xsi:type="bpmn:tFormalExpression">${nrOfCompletedInstances == numberApprovals}</bpmn:completionCondition>
+      </bpmn:multiInstanceLoopCharacteristics>
+    </bpmn:userTask>
+    <bpmn:sequenceFlow id="Flow_1ncl3k8" name="拒绝" sourceRef="Activity_156io7d" targetRef="Activity_14mnow7">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approve==1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_03ckde1" name="拒绝" sourceRef="Activity_1ezp043" targetRef="Activity_14mnow7">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">${approve==1}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="gradualApproval">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="192" y="82" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="199" y="52" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_106g3s5_di" bpmnElement="Activity_14mnow7">
+        <dc:Bounds x="160" y="170" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_110i53j_di" bpmnElement="Event_110i53j">
+        <dc:Bounds x="192" y="552" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="199" y="595" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1pnyoab_di" bpmnElement="Activity_156io7d">
+        <dc:Bounds x="160" y="420" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1afp88w_di" bpmnElement="Activity_1ezp043">
+        <dc:Bounds x="160" y="300" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1747ke5_di" bpmnElement="Flow_1747ke5">
+        <di:waypoint x="210" y="118" />
+        <di:waypoint x="210" y="170" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0t3binq_di" bpmnElement="Flow_0t3binq">
+        <di:waypoint x="210" y="250" />
+        <di:waypoint x="210" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ug1mkb_di" bpmnElement="Flow_0ug1mkb">
+        <di:waypoint x="210" y="500" />
+        <di:waypoint x="210" y="552" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1596fhq_di" bpmnElement="Flow_1596fhq">
+        <di:waypoint x="210" y="380" />
+        <di:waypoint x="210" y="420" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ncl3k8_di" bpmnElement="Flow_1ncl3k8">
+        <di:waypoint x="260" y="460" />
+        <di:waypoint x="310" y="460" />
+        <di:waypoint x="310" y="210" />
+        <di:waypoint x="260" y="210" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="314" y="332" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_03ckde1_di" bpmnElement="Flow_03ckde1">
+        <di:waypoint x="230" y="300" />
+        <di:waypoint x="230" y="250" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="234" y="275" width="22" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -1,0 +1,6 @@
+-- ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE utf8_bin 替换为空
+-- boolean 替换为 tinyint
+-- tinyint NOT NULL default TRUE 替换为 tinyint NOT NULL default 1
+-- LONGBLOB 替换为 BLOB
+-- LONGTEXT 替换为 TEXT
+-- create index ACT_IDX_JOB_HANDLER on ACT_RU_JOB(HANDLER_TYPE_(100),HANDLER_CFG_(155)); 暂时注释掉
